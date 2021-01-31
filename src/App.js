@@ -11,11 +11,10 @@ import {connect} from "react-redux";
 import {compose} from "redux";
 import {initializeApp} from "./redux/app-reducer";
 import Preloader from "./components/common/Preloader/Preloader";
+import ProfileContainer from "./components/Profile/ProfileContainer";
 
 //import DialogsContainer from "./components/Dialogs/DialogsContainer";
 const DialogsContainer = React.lazy(() => import('./components/Dialogs/DialogsContainer'));
-//import ProfileContainer from "./components/Profile/ProfileContainer";
-const ProfileContainer = React.lazy(() => import('./components/Profile/ProfileContainer'));
 
 
 class App extends React.Component {
@@ -41,11 +40,7 @@ class App extends React.Component {
                            }}/>
 
                     <Route path='/profile/:userId?'
-                           render={() =>  {
-                               return <React.Suspense fallback={<h1>Loading...</h1>}>
-                                   <ProfileContainer/>
-                               </React.Suspense>
-                           }}/>
+                           render={() => <ProfileContainer/>}/>
                     <Route path='/users'
                            render={() => <UsersContainer/>}/>
                     <Route path='/login'

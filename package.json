@@ -2,7 +2,7 @@
   "name": "react-way-of-samurai",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://tanikom.github.io/samurai-network",
+  "homepage": "https://tanikom.github.io/react-network-project/",
   "dependencies": {
     "axios": "^0.21.0",
     "classnames": "^2.2.6",
