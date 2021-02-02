@@ -8,9 +8,10 @@ import {Textarea} from "../../common/FormsControls/FormsControls";
 const maxLength10 = maxLengthCreator(10);
 
 const MyPosts = React.memo((props) => {
-    console.log("render");
     let postsElements =
-        props.posts.map(p => <Post message={p.message} likesCount={p.likesCount}/>);
+        [...props.posts]
+            .reverse()
+            .map(p => <Post key={p.id} message={p.message} likesCount={p.likesCount}/>);
 
     let newPostElement = React.createRef();
 
@@ -34,15 +35,16 @@ const AddNewPostForm = (props) => {
     return (
         <form onSubmit={props.handleSubmit}>
             <div>
-                <Field component ={Textarea} name={"newPostText"} validate={[ required, maxLength10]} placeholder={"Post message"}/>
+                <Field component={Textarea} name={"newPostText"} validate={[required, maxLength10]}
+                       placeholder={"Post message"}/>
             </div>
             <div>
-                <button >Add post</button>
+                <button>Add post</button>
             </div>
         </form>
     )
 }
 
-const AddNewPostFormRedux = reduxForm({form:"ProfileAddNewPostForm"}) (AddNewPostForm)
+const AddNewPostFormRedux = reduxForm({form: "ProfileAddNewPostForm"})(AddNewPostForm)
 
 export default MyPosts;
