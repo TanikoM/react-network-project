@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import Navbar from './components/Navbar/Navbar';
-import {Route, withRouter} from "react-router-dom";
+import {Redirect, Route, Switch, withRouter} from "react-router-dom";
 
 import UsersContainer from "./components/Users/UsersContainer";
 
@@ -18,8 +18,15 @@ const DialogsContainer = React.lazy(() => import('./components/Dialogs/DialogsCo
 
 
 class App extends React.Component {
+    catchAllUnhandledErrors = () => {
+        alert("Some error occrued");
+    }
     componentDidMount() {
         this.props.initializeApp();
+        window.addEventListener("unhandledrejection", this.catchAllUnhandledErrors);
+    }
+    componentWillUnmount() {
+        window.removeEventListener("unhandledrejection", this.catchAllUnhandledErrors);
     }
 
     render() {
@@ -32,19 +39,24 @@ class App extends React.Component {
                 <HeaderContainer/>
                 <Navbar/>
                 <div className='app-wrapper-content'>
-                    <Route path='/dialogs'
-                           render={() => {
-                               return <React.Suspense fallback={<h1>Loading...</h1>}>
-                                   <DialogsContainer/>
-                               </React.Suspense>
-                           }}/>
-
-                    <Route path='/profile/:userId?'
-                           render={() => <ProfileContainer/>}/>
-                    <Route path='/users'
-                           render={() => <UsersContainer/>}/>
-                    <Route path='/login'
-                           render={() => <Login/>}/>
+                    <Switch>
+                        <Route exact path='/'
+                               render={() => <Redirect to={"/profile"}/>}/>
+                        <Route path='/dialogs'
+                               render={() => {
+                                   return <React.Suspense fallback={<h1>Loading...</h1>}>
+                                       <DialogsContainer/>
+                                   </React.Suspense>
+                               }}/>
+                        <Route path='/profile/:userId?'
+                               render={() => <ProfileContainer/>}/>
+                        <Route path='/users'
+                               render={() => <UsersContainer/>}/>
+                        <Route path='/login'
+                               render={() => <Login/>}/>
+                        <Route path='*'
+                               render={() => <div>404 NOT FOUND</div>}/>
+                    </Switch>
                 </div>
             </div>
         )
@@ -53,9 +65,9 @@ class App extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-initialized: state.app.initialized
+    initialized: state.app.initialized
 })
 
 export default compose(
-withRouter,
-connect(mapStateToProps, {initializeApp})) (App);
+    withRouter,
+    connect(mapStateToProps, {initializeApp}))(App);
